@@ -3,11 +3,11 @@
 using namespace std;
 void BF(int BFValue[], int BFPrev[], int V, int u, int graph[30][30] ) //u is source vertex 
 {
-//     for(int i=0;i<V;i++)
-// {
-//     BFValue[i]=INF;
-//     BFPrev[i]=-1;
-// }
+    for(int i=0;i<V;i++)
+{
+    BFValue[i]=INF;
+    BFPrev[i]=-1;
+}
 BFValue[u]=0;
 for(int k=0;k<V-2;k++){ //k la so vong lap 
     for(int v=0;v<V;v++){ //v la dinh dang xet 
