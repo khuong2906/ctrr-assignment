@@ -9,8 +9,8 @@ void BF(int graph[30][30],int V,char u, int BFValue[], int BFPrev[]   ) //u is s
          for(int i = 0 ; i<V ; i++){
                if(BFValue[i] != -1&& BFValue[i]!=start) 
                isFirstTime= false; 
-           }    
-          
+    }
+
     if(isFirstTime){
         for (int v = 0; v < V; ++v) {
             // Nếu có cạnh từ u -> v
@@ -18,7 +18,7 @@ void BF(int graph[30][30],int V,char u, int BFValue[], int BFPrev[]   ) //u is s
                 BFValue[v] = BFValue[u] + graph[u][v];
                 BFPrev[v] = u;  // Đánh dấu là đã có cập nhật
             }
-        }
+        }   
     }
     BFValue[start] = 0; // k is the number of iterations
        for (int u = 0; u <V; ++u) {
@@ -37,14 +37,16 @@ void BF(int graph[30][30],int V,char u, int BFValue[], int BFPrev[]   ) //u is s
 }
 int main() {
     int graph[30][30] = {
-        {0, 6, 0, 2, 7},
-        {6, 0, 2, 4, 8},
-        {0, 2, 0, 7, 0},
-        {2, 4, 7, 0, 9},
-        {7, 8, 0, 9, 0}
+        {0, 8, 4, 1, 0,2,0},
+        {8,0,0,0,5,0,2},
+        {4, 0,0,9,0,1,3},
+        {1, 0,9,0,4,0,2},
+        {0,5,0,4,0,7,1},
+        {2,0,1,0,7,0,6},
+        {0,2,3,2,1,6,0},   
     };
     char u = 'A';
-    int V = 5;               // Số lượng đỉnh        // Đỉnh nguồn
+    int V = 7;               // Số lượng đỉnh        // Đỉnh nguồn
     int BFValue[30], BFPrev[30];
 for(int i=0;i<V;i++){
 BFValue[i]=-1;
