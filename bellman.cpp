@@ -1,63 +1,80 @@
 #include <iostream>
 // #define INF 1000000 // or any large value representing infinity
-using namespace std;
+#include <climits>
+#include "bellman.h"
+using namespace std; 
+void BF(int graph[30][30], int vertices, char startVertex, int valueArray[30], int prevArray[30]) {
+    int start = startVertex - 'A'; 
+    valueArray[start] = 0;
+    bool isFirstStep = true;
 
-void BF(int graph[30][30],int V,char u, int BFValue[], int BFPrev[]   ) //u is source vertex 
-{
-    int start= u -'A';
-    bool isFirstTime=true;
-         for(int i = 0 ; i<V ; i++){
-               if(BFValue[i] != -1&& BFValue[i]!=start) 
-               isFirstTime= false; 
+    for (int i = 0; i < vertices; ++i) {
+        if (valueArray[i] != -1&& i!=start ) {
+            isFirstStep = false;
+            break;
+        }
     }
 
-    if(isFirstTime){
-        for (int v = 0; v < V; ++v) {
-            // Nếu có cạnh từ u -> v
+     if (isFirstStep) {
+        for (int v = 0; v < vertices; ++v) {
             if (graph[start][v] > 0) {
-                BFValue[v] = BFValue[u] + graph[u][v];
-                BFPrev[v] = u;  // Đánh dấu là đã có cập nhật
+                    valueArray[v] = valueArray[start] + graph[start][v];
+                    prevArray[v] = start;
             }
         }   
+        return;
     }
-    BFValue[start] = 0; // k is the number of iterations
-       for (int u = 0; u <V; ++u) {
-            for (int v = 0; v < V; ++v) {
-                // Nếu có cạnh từ u -> v
+    
+    int tempArray[30];
+    for (int j = 0; j < vertices; ++j) {
+        tempArray[j] = valueArray[j];
+    }
+        
+    for (int i = 0; i < vertices - 1; ++i) {
+        for (int u = 0; u < vertices; ++u) {
+            if (valueArray[u] == -1) continue;
+            for (int v = 0; v < vertices; ++v) {
                 if (graph[u][v] > 0) {
-                    // Nếu v chưa được truy cập hoặc khoảng cách qua u nhỏ hơn khoảng cách hiện tại của v
-                    if ((BFValue[v] == -1 && BFValue[u] >= 0) || 
-                        (BFValue[u] + graph[u][v] < BFValue[v] && BFValue[u] >= 0)) {
-                        BFValue[v] = BFValue[u] + graph[u][v];
-                        BFPrev[v] = u;  // Đánh dấu là đã có cập nhật
+                    if (tempArray[u] + graph[u][v] < valueArray[v] || valueArray[v]==-1) {
+                        valueArray[v] = tempArray[u] + graph[u][v];
+                        prevArray[v] = u;
                     }
                 }
             }
         }
+    }
+    
 }
-int main() {
-    int graph[30][30] = {
-        {0, 8, 4, 1, 0,2,0},
-        {8,0,0,0,5,0,2},
-        {4, 0,0,9,0,1,3},
-        {1, 0,9,0,4,0,2},
-        {0,5,0,4,0,7,1},
-        {2,0,1,0,7,0,6},
-        {0,2,3,2,1,6,0},   
-    };
-    char u = 'A';
-    int V = 7;               // Số lượng đỉnh        // Đỉnh nguồn
-    int BFValue[30], BFPrev[30];
-for(int i=0;i<V;i++){
-BFValue[i]=-1;
-BFPrev[i]=-1;
-}
-    BF(graph, V, u, BFValue, BFPrev);
 
-    std::cout << "Khoảng cách từ đỉnh nguồn:" << std::endl;
-    for (int i = 0; i < V; i++) {
-        cout<<BFValue[i]<<" ";
+
+string BF_Path(int graph[30][30], int vertices, char startVertex, char endVertex) {
+      int BFValue[30];
+      int BFPrev[30];
+      int index[30];
+    int current = endVertex - 'A';
+    int pathLength = 0;
+    for (int i = 0; i < vertices; i++) {
+        BFValue[i] = 999;
+        BFPrev[i] = -1;
+    }
+    for(int i=0;i<vertices -1 ;i++){
+        BF(graph, vertices, startVertex, BFValue, BFPrev);
+    }
+    
+    while (current != (startVertex - 'A')) {
+        if (current == -1 ) return "No path found";
+        index[pathLength] = current;
+        current = BFPrev[current];
+        pathLength+=1;
+    }
+    index[pathLength] = startVertex - 'A'; 
+
+    string result = "";
+    for (int i = pathLength; i >= 0; --i) {
+        result += (index[i] + 'A');
+        result += " ";
     }
 
-    return 0;
+    return result;
+    
 }
